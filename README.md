@@ -5,3 +5,7 @@
 ```
 npx skills add CuzTeam/blueprint
 ```
+
+## Extensions
+- [HOP](https://github.com/kernel4632/HOP)
+- [vercel-react-best-practices](https://github.com/vercel-labs/agent-skills)
