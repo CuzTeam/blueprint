@@ -1,0 +1,187 @@
+---
+name: hop
+version: 1.0.0
+author: Human-Oriented Programming
+type: embedded
+conflicts: []
+activation:
+  keywords: [code, coding, implementation, developer, programming, backend, frontend, python, vue, javascript, typescript]
+  always: false
+---
+
+## Summary
+
+HOP（面向人类编程）是一套以"让任何人只看局部代码就能理解、学习、接手"为目标的编程规范。它要求代码零背景知识依赖，注释即教材，命名即说明书，架构遵循"触发事件→指令执行→数据修改→效果反馈"这条主线。启用后，Blueprint 会在 ARCHITECTURE.md 中注入 HOP 目录规范，在 SPEC.md 中追加代码风格约定，在 CHECKLIST.md 中加入 HOP 合规检查项。
+
+## Affects
+
+- `ARCHITECTURE.md` — injects HOP directory structure conventions and naming rules
+- `SPEC.md` — appends HOP coding standards section and function structure rules
+- `CHECKLIST.md` — adds HOP compliance checks to every implementation task
+- `CODING_STANDARDS.md` — generates a new standalone HOP reference file
+
+## Inject Points
+
+- `ARCHITECTURE.md` → `## Directory Structure` section (append after blueprint content)
+- `SPEC.md` → after all feature sections (new `## HOP Coding Standards` section)
+- `CHECKLIST.md` → each implementation task gets an additional completion criterion
+- New file: `CODING_STANDARDS.md` at project root
+
+## Notes
+
+HOP is language-agnostic in principle but provides concrete examples for Vue (frontend) and Python (backend). When generating CODING_STANDARDS.md, detect the tech stack from ARCHITECTURE.md and tailor examples accordingly.
+
+---
+
+## Injected Content
+
+### For ARCHITECTURE.md
+
+Append inside `<!-- ext:hop --> ... <!-- /ext:hop -->` after Directory Structure:
+
+```
+### HOP Directory Conventions
+
+Architecture follows: 触发事件 → 指令执行 → 数据修改 → 效果反馈
+
+**Vue frontend:**
+- components/   — page structure and event triggers (UI layer only)
+- commands/     — one file per business subject, all actions for that subject
+- store.js      — all shared business data and state (split to stores/ if large)
+- assets/       — static resources
+
+**Python backend:**
+- main.py       — entry point only; receives triggers, calls commands
+- commands/     — one file per business subject (user.py, order.py, file.py)
+                  each file exposes methods like user.add(), order.pay()
+- store.py      — shared runtime state (split to stores/ if large)
+- data.py       — persistent data (split to data/ if large)
+- tools/        — only truly generic, business-agnostic utilities
+
+**Naming rules:**
+- Use real-world subject names: user, order, score — not: controller, service, repository
+- Flat structure: <4 files → flat, 4-8 → 1 folder level, >8 → 2 folder levels
+- Abbreviations: treat as atomic units — userID not userId, parseJSON not parseJson
+  - Standalone or prefix: lowercase (id, url, api, jsonText, apiUser)
+  - After a word: ALL CAPS (userID, fileURL, parseJSON, sendHTTP)
+  - Class/object names: ALL CAPS (UserAPI, HTTPServer, JSONData)
+```
+
+### For SPEC.md
+
+Append as a new top-level section `## HOP Coding Standards` at the end of the file:
+
+```markdown
+## HOP Coding Standards
+
+<!-- ext:hop -->
+All implementation must follow HOP conventions. These apply to every feature above.
+
+### Architecture Constraint
+Every code path must be traceable along: 触发事件 → 指令执行 → 数据修改 → 效果反馈
+- Entry points only route triggers to commands — no business logic
+- Commands own one complete business action — no UI manipulation
+- Store/data holds state — commands read/write it, never UI components directly
+- Feedback returns results in the caller's terms — not internal errors
+
+### Function Structure (fixed order)
+1. Function header comment (plain language, one line if simple)
+2. Guard clauses with comments explaining why
+3. [blank line]
+4. Read data → process logic → modify data
+5. Return / feedback result
+
+### Function Size
+- Sweet spot: 4–16 lines
+- Extract only when a block forms an independent semantic unit
+- Never extract fragments < 3 lines or single-use helpers
+
+### Comment Rules
+- File header: multi-line, plain language, real call examples (browser.open(url) not open())
+- Trailing comments on single lines, block comments above multi-line blocks
+- Magic numbers, non-obvious order, compatibility shims: always explain why
+- No code is self-documenting enough — write for a beginner learning the language
+- Every guard clause gets a comment
+
+### Naming
+- Methods: verb + noun (addStudent, getScore, removeOrder)
+- Variables: what it is (userName, totalScore)
+- Booleans: is/has/can/should prefix (isReady, hasPermission)
+- Commands export: subject name only (Browser not BrowserCommand)
+<!-- /ext:hop -->
+```
+
+### For CHECKLIST.md
+
+For every implementation task, append this completion criterion:
+
+```
+  - HOP compliance: function structure follows guard→logic→return order,
+    all magic numbers commented, no fragments < 3 lines extracted,
+    file header includes real call examples
+```
+
+### New File: CODING_STANDARDS.md
+
+Generate at `/.docs/<planname>/CODING_STANDARDS.md`:
+
+```markdown
+---
+plan: <planname>
+version: 1.0
+created: <YYYY-MM-DD>
+source: ext:hop
+---
+
+# Coding Standards: <planname>
+
+> This file is generated by the HOP extension. It is the implementation reference
+> for all developers on this project. Read this before writing any code.
+
+## Core Architecture
+
+All code follows one traceable chain:
+**触发事件 → 指令执行 → 数据修改 → 效果反馈**
+
+| Layer | Responsibility | What it must NOT do |
+|-------|---------------|---------------------|
+| Entry (main/router) | Receive trigger, call command | Business logic |
+| Command | One complete business action | Touch UI directly |
+| Store/Data | Hold and provide state | Contain logic |
+| Tools | Generic, business-agnostic utils | Know about domain objects |
+| Feedback | Return results to caller | Know internal implementation |
+
+## Directory Structure
+
+[Populated from ARCHITECTURE.md HOP conventions]
+
+## Naming Reference
+
+| Pattern | Correct | Wrong |
+|---------|---------|-------|
+| Abbreviation standalone | `id`, `url`, `apiUser` | `Id`, `Url`, `ApiUser` |
+| Abbreviation after word | `userID`, `parseJSON` | `userId`, `parseJson` |
+| Class with abbreviation | `UserAPI`, `HTTPServer` | `UserApi`, `HttpServer` |
+| Command export | `Browser.open()` | `BrowserCommand.open()` |
+| Method names | `addStudent`, `getScore` | `studentAdd`, `scoreGet` |
+| Boolean vars | `isReady`, `hasPermission` | `ready`, `permissionCheck` |
+
+## Function Template
+
+[Adapt to project language from ARCHITECTURE.md tech stack]
+
+## Comment Examples
+
+[Adapt to project language from ARCHITECTURE.md tech stack]
+
+## What Counts as Done (HOP)
+
+A task is complete only when:
+- [ ] Data flow is traceable: trigger → command → store → feedback
+- [ ] File header has plain-language description + real call examples
+- [ ] Every guard clause has a comment explaining why
+- [ ] All magic numbers, special ordering, non-obvious code has comments
+- [ ] No function extracted < 3 lines or used only once
+- [ ] Abbreviations follow the atomic-unit rule throughout
+- [ ] A beginner could read the code and learn from the comments
+```
