@@ -27,8 +27,75 @@ Present the tier table from `modules/tiers.md`. State your recommendation and wh
 
 Do not proceed until the user confirms a tier.
 
+### Q3.5 — Extension Check
+
+Read `modules/extensions.md` fully. Scan the `extensions/` directory and read every EXTENSION.md.
+
+#### Step A — Built-in registry query (if context7 active)
+```
+IF context7 extension is installed and active:
+  → Run: ctx7 skills suggest   (auto-detect from project deps)
+  → Run: ctx7 skills search "<tech stack keyword>"  (for each major tech detected)
+  → Filter results by trust score per context7 EXTENSION.md policy
+  → Add qualifying results to the extensions list for presentation
+```
+
+#### Step B — Present all available extensions
+
+Group by status and show inline — do not make the user ask:
+
+```
+Extensions:
+
+  Embedded (ready to use):
+  ✅ hop — Human-Oriented Programming coding standards
+
+  Not installed (I can install these):
+  📦 verification-before-completion — Explicit verification gates before marking tasks done [always recommended]
+  📦 subagent-driven-development — Multi-agent task coordination
+  📦 firecrawl — Web search for Research Phase (enables full research)
+  📦 web-design-guidelines — Vercel web UI/UX principles
+  📦 tailwind-design-system — Tailwind CSS utility conventions
+  📦 vercel-react — React/Next.js best practices
+  📦 context7 — Skills registry browser
+
+  [+ any ctx7 suggestions, with trust scores]
+
+Would you like to enable any? For uninstalled ones I can run the install command now.
+```
+
+#### Step C — Install flow
+
+For each extension the user wants that isn't installed:
+```
+→ Show the install command from EXTENSION.md
+→ Ask: "Install now?"
+→ IF yes → execute install command → confirm success → mark as enabled
+→ IF no → skip, do not re-prompt this session
+```
+
+#### Step D — Conflict resolution
+```
+IF two enabled extensions declare a conflict:
+  → Describe the conflict (from their EXTENSION.md Notes)
+  → Ask user which to keep
+  → Disable the other for this session
+```
+
+#### Step E — Search capability determination
+
+After extensions are finalized, determine search mode for Research Phase:
+```
+IF native search tool available → search_capability: full (native)
+ELIF firecrawl extension enabled → search_capability: full (firecrawl)
+ELIF any browser/search tool available → search_capability: full (other)
+ELSE → search_capability: degraded
+   → Warn: "⚠️ No search capability. Research Phase will use built-in references only.
+     Install firecrawl or enable a search tool for full research."
+```
+
 ### Q4 — Optional Add-ons
-After tier is confirmed, ask:
+After extensions are confirmed, ask:
 - "Would you like to add any optional files from higher tiers?" (list what's available for their tier)
 - "Do you need any custom files beyond the standard set?"
 
@@ -36,27 +103,28 @@ If they add a file with a reserved name, remind them: it must follow the standar
 If they add a custom file, confirm the name won't cause confusion.
 
 ### Q5 — Existing Directory Check
-Ask (or check silently if possible): does `/.docs/<planname>/` already exist?
+Check silently if possible: does `/.docs/<planname>/` already exist?
 
-- IF yes → warn the user: "This directory already exists. Do you want to overwrite, merge, or abort?"
+- IF yes → warn: "This directory already exists. Overwrite, merge, or abort?"
 - IF no → proceed
 
 ### Q6 — DESIGN.md Check
 If `FRONTEND_DESIGN.md` is in scope (T3 or opted-in):
 - Check if `DESIGN.md` already exists at `/.docs/<planname>/DESIGN.md`
-- IF yes → confirm with user: "I found a DESIGN.md — I'll use it as the source for FRONTEND_DESIGN.md."
-- IF no → note that you'll generate FRONTEND_DESIGN.md from context, and remind them they can drop one in later
+- IF yes → confirm: "Found a DESIGN.md — I'll use it as the source for FRONTEND_DESIGN.md."
+- IF no → note that FRONTEND_DESIGN.md will be inferred, remind user they can drop one in later
 
 ---
 
-## After Alignment
+## After Alignment — Summary
 
-Summarize what you're about to generate:
+Present a single consolidated summary before any work begins. Wait for user confirmation.
 
 ```
-Here's what I'll create at /.docs/<planname>/:
+Here's the plan for /.docs/<planname>/:
 
 Tier: T2 (Standard)
+
 Files:
   ✅ README.md
   ✅ PLAN.md
@@ -65,27 +133,15 @@ Files:
   ✅ ARCHITECTURE.md
   ➕ DATAMODEL.md (opted in)
 
+Extensions enabled:
+  ✅ hop (embedded)
+  ✅ verification-before-completion (installing...)
+  ✅ firecrawl (installing...)
+
+Research Phase: full (firecrawl)
+  Will research: [inferred domain list based on project description]
+
 Shall I proceed?
 ```
 
-Wait for confirmation before writing.
-
----
-
-## Q3.5 — Extension Check (runs after Q3, before Q4)
-
-Read `modules/extensions.md` fully, then scan the `extensions/` directory.
-
-Present results inline during alignment — do not make the user ask about extensions separately.
-
-After summarizing the pre-flight (Step: After Alignment), add an extensions block:
-
-```
-Extensions available:
-  ✅ hop (embedded) — Human-Oriented Programming coding standards
-  📦 vercel-react (not installed) — Vercel React/Next.js best practices
-
-Would you like to enable any? For uninstalled ones, I can run the install command.
-```
-
-Follow the lifecycle defined in `modules/extensions.md` for install prompts and conflict resolution.
+Only after user confirms → proceed to Research Phase (modules/research.md).

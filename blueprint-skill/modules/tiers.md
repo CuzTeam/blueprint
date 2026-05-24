@@ -22,6 +22,7 @@ Defines the available documentation tiers. The user must select a tier. Agent ma
 | `PLAN.md` | ✅ | ✅ | ✅ |
 | `CHECKLIST.md` | ✅ | ✅ | ✅ |
 | `SPEC.md` | ✅ | ✅ | ✅ |
+| `SOURCES.md` | ✅ | ✅ | ✅ |
 | `ARCHITECTURE.md` | — | ✅ | ✅ |
 | `FRONTEND_DESIGN.md` | — | — | ✅ |
 | `DATAMODEL.md` | — | — | ✅ |

@@ -7,6 +7,11 @@ Files must be written in dependency order. Later files reference earlier ones �
 ## Order
 
 ```
+0. SOURCES.md
+   └── Created during Research Phase (before any file below).
+   └── Always required at every tier.
+   └── Updated incrementally whenever a new source is consulted during steps 1–7.
+
 1. PLAN.md
    └── No dependencies. Written first to establish goals and non-goals.
 
@@ -24,6 +29,7 @@ Files must be written in dependency order. Later files reference earlier ones �
 
 5. FRONTEND_DESIGN.md (if included)
    └── Depends on: SPEC.md (pages/features), ARCHITECTURE.md (routes), DESIGN.md (if present)
+   └── REQUIRES: WCAG/APCA/HIG must be read before this step (see modules/research.md).
    └── See modules/design-integration.md for source priority rules.
 
 6. CHECKLIST.md
@@ -32,14 +38,29 @@ Files must be written in dependency order. Later files reference earlier ones �
 
 7. README.md
    └── Depends on: all other files (indexes them)
-   └── Written last.
+   └── Written last. Must include SOURCES.md in Documentation Index.
+```
+
+---
+
+## Pre-file Checklist (run before writing each file)
+
+Before writing any file in steps 1–7:
+
+```
+1. Re-read /.docs/<planname>/.research/brief.md
+2. Identify which research findings apply to this file
+3. IF this file has frontend/UI content AND mandatory standards not yet applied
+   → Read references/accessibility/ before proceeding (WCAG, APCA, HIG)
+4. Apply findings. Cite with <!-- research: <domain> --> where non-obvious.
+5. IF any new external source was consulted during writing → update SOURCES.md
 ```
 
 ---
 
 ## Naming Convention for Anchors
 
-When writing SPEC.md, use consistent heading anchors so CHECKLIST.md can reference them. Format:
+When writing SPEC.md, use consistent heading anchors so CHECKLIST.md can reference them:
 
 ```
 ## User System           → anchor: #user-system
@@ -47,9 +68,9 @@ When writing SPEC.md, use consistent heading anchors so CHECKLIST.md can referen
 ### Login                → anchor: #login
 ```
 
-CHECKLIST references must use the full path pattern:
+CHECKLIST references use the full path pattern:
 ```
 → SPEC.md#user-system--register
 ```
 
-Confirm your markdown renderer's anchor format before writing (GitHub uses `--` for nested headings, some renderers use `-`). Prefer the simpler single-level anchors where possible by keeping SPEC headings distinct across the document.
+Confirm your markdown renderer's anchor format before writing (GitHub uses `--` for nested headings, some renderers use `-`). Prefer simpler single-level anchors by keeping SPEC headings distinct across the document.
