@@ -4,6 +4,53 @@ Run this interview **before writing any files**. Do not skip or abbreviate. The 
 
 ---
 
+## Language Detection (runs before Q0)
+
+Detect the user's language from their message and use it for **all generated document content**,
+all alignment questions, all summaries, and all Agent responses throughout the session.
+
+```
+language = detect language from user's first message
+
+IF language is detected with confidence
+  → Use that language for all output
+  → Do NOT default to English unless the user writes in English
+
+IF language cannot be determined
+  → Ask once: "What language should I use for the documents?"
+  → Use the answer for the rest of the session
+
+IF user switches language mid-session
+  → Switch immediately and continue in the new language
+  → Do NOT ask for confirmation
+```
+
+### What "all output" means
+
+- All alignment questions and responses
+- All generated file content (PLAN.md, SPEC.md, CHECKLIST.md, etc.)
+- All inline comments inside generated files
+- All summaries, confirmations, and warnings
+- Research Brief (internal) and SOURCES.md (user-facing)
+- Extension inject blocks
+
+### What stays in English regardless of language
+
+- File names: `README.md`, `PLAN.md`, `SPEC.md`, etc. — always English filenames
+- Code snippets, shell commands, and technical identifiers
+- YAML frontmatter keys (`plan:`, `version:`, `status:`, etc.)
+- Markdown structural syntax
+- `<!-- comments -->` tag syntax (content inside comments follows user language)
+- Reserved keywords in SPEC logic: `IF`, `ELIF`, `ELSE` — keep as-is for parsability
+
+### Example
+
+User writes in Chinese → all document prose, section headings, descriptions, annotations,
+checklist items, and Agent messages are written in Chinese. File is still named `SPEC.md`.
+Frontmatter key is still `plan:` but its value is the project name as the user gave it.
+
+---
+
 ## Questions to Ask (in order)
 
 ### Q1 — Project Name
