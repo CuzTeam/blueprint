@@ -22,6 +22,7 @@ Generates a structured, consistent, cross-referenced documentation set for a pro
 | Tier System | `modules/tiers.md` | Always — read first |
 | Alignment Interview | `modules/alignment.md` | Always — before writing any files |
 | Extension System | `modules/extensions.md` | Always — read during alignment |
+| Research Phase | `modules/research.md` | Always — mandatory after alignment |
 | File Writing Order | `modules/write-order.md` | When generating files |
 | Consistency Check | `modules/consistency.md` | After all files written |
 | DESIGN.md Integration | `modules/design-integration.md` | When FRONTEND_DESIGN.md is in scope |
@@ -33,15 +34,39 @@ Generates a structured, consistent, cross-referenced documentation set for a pro
 ## Execution Flow
 
 ```
-1. READ modules/tiers.md
-2. READ modules/alignment.md → run alignment interview → confirm with user
-   └── READ modules/extensions.md → scan extensions/ → present & install as needed
-3. READ references/file-standards.md
-4. IF FRONTEND_DESIGN.md in scope → READ modules/design-integration.md
-5. READ modules/write-order.md → write files in order
-   └── FOR each enabled extension → apply inject points per modules/extensions.md
-6. READ modules/consistency.md → run consistency check
-7. Output results + prompts
+1.  READ modules/tiers.md
+2.  READ modules/alignment.md
+    └── READ modules/extensions.md → scan extensions/ → present, install, resolve conflicts
+    └── IF context7 active → query registry for additional relevant skills
+3.  Run alignment interview → get user confirmation on tier + extensions
+4.  READ modules/research.md
+    └── CHECK: is search capability available?
+        ├── YES (native tool OR firecrawl extension active) → Full Research
+        └── NO → Degraded Research + warn user
+    └── Produce /.docs/<planname>/.research/brief.md
+    └── Resolve any open conflicts with user before continuing
+5.  READ references/file-standards.md
+6.  IF FRONTEND_DESIGN.md in scope → READ modules/design-integration.md
+7.  READ modules/write-order.md → write files in order
+    └── Before each file: re-read research brief, apply findings
+    └── FOR each enabled extension → apply inject points per modules/extensions.md
+8.  READ modules/consistency.md → run consistency check
+9.  Output results + prompts
 ```
 
-**Do not write any files before completing Step 2.**
+**Do not write any files before completing Steps 2–4.**
+
+---
+
+## Search Capability Detection
+
+At Step 4, determine search capability by checking in order:
+
+```
+IF native web search tool is available → use it, search_capability: full
+ELIF firecrawl extension is installed AND active → use firecrawl, search_capability: full
+ELIF any other search/browser tool is available → use it, search_capability: full
+ELSE → search_capability: degraded
+```
+
+Record the result in the Research Brief frontmatter.
