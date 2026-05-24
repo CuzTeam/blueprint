@@ -145,3 +145,21 @@ Shall I proceed?
 ```
 
 Only after user confirms → proceed to Research Phase (modules/research.md).
+
+---
+
+## Q0 — Public Docs Pre-flight (runs before everything else)
+
+Before asking any questions, silently check `/.docs/public/`:
+
+```
+IF /.docs/public/ exists AND contains files:
+  → Read every file, alphabetically, before proceeding
+  → Inform user: "Found <N> file(s) in /.docs/public/ — read and applied as context."
+  → These docs inform all subsequent alignment questions and document generation
+ELSE:
+  → Continue normally
+```
+
+This check runs once at the start. If the user drops files into `/.docs/public/` mid-session,
+the write-order Pre-file Checklist handles the re-read.

@@ -43,17 +43,47 @@ Files must be written in dependency order. Later files reference earlier ones �
 
 ---
 
+## /.docs/public/ — User-Supplied Context Documents
+
+Before any file is written, and at the start of every Blueprint run:
+
+```
+CHECK /.docs/public/
+IF directory exists AND contains any files:
+  → Read every file in alphabetical order, without exception
+  → No file may be skipped
+  → Log each file in SOURCES.md under "Public Docs" section
+
+IF a new file appears in /.docs/public/ mid-session:
+  → Re-read the entire directory before writing any remaining files
+```
+
+These files are user-supplied context: brand rules, legal requirements, existing API contracts,
+internal style guides, product specs, or anything else the user has placed there.
+They are treated as authoritative user decisions — highest priority after legal/compliance standards.
+
+Conflict handling:
+```
+IF a public doc contradicts a Blueprint standard or research finding:
+  → Public doc wins (it represents a user decision)
+  → UNLESS it violates a legal/compliance standard (WCAG AA floor, PCI DSS, etc.)
+  → Log the conflict in SOURCES.md Conflict Log with resolution noted
+```
+
+---
+
 ## Pre-file Checklist (run before writing each file)
 
 Before writing any file in steps 1–7:
 
 ```
-1. Re-read /.docs/<planname>/.research/brief.md
-2. Identify which research findings apply to this file
-3. IF this file has frontend/UI content AND mandatory standards not yet applied
+1. Confirm /.docs/public/ has been read (see above) — if not, read it now
+2. Re-read /.docs/<planname>/.research/brief.md
+3. Identify which research findings apply to this file
+4. IF this file has frontend/UI content AND mandatory standards not yet applied
    → Read references/accessibility/ before proceeding (WCAG, APCA, HIG)
-4. Apply findings. Cite with <!-- research: <domain> --> where non-obvious.
-5. IF any new external source was consulted during writing → update SOURCES.md
+5. Apply findings. Cite with <!-- research: <domain> --> where non-obvious.
+6. IF any new external source was consulted during writing → update SOURCES.md
 ```
 
 ---
