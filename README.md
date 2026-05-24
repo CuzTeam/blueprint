@@ -1,10 +1,14 @@
 <img width="3840" height="2160" alt="Blueprint" src="https://github.com/user-attachments/assets/2358bf67-750a-44e4-a830-159df20d6426" />
 
 
-## Usage
+## Installation
 ```
 npx skills add CuzTeam/blueprint
 ```
+
+## Usage
+### Store Documents
+> Store documents in `/.docs/public/` to have them automatically read and indexed by Blueprint. These are user-supplied context: brand rules, legal requirements, existing API contracts, etc.
 
 ## Extensions
 - [HOP](https://github.com/kernel4632/HOP)
