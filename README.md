@@ -9,3 +9,9 @@ npx skills add CuzTeam/blueprint
 ## Extensions
 - [HOP](https://github.com/kernel4632/HOP)
 - [vercel-react-best-practices](https://github.com/vercel-labs/agent-skills)
+- [Context7](https://context7.com)
+- [Firecrawl](https://firecrawl.dev)
+- [Web Design Guidelines](https://github.com/vercel-labs/agent-skills)
+- [Tailwind Design System](https://github.com/wshobson/agents)
+- [verification-before-completion](https://github.com/obra/superpowers)
+- [subagent-driven-development](https://github.com/obra/superpowers)
